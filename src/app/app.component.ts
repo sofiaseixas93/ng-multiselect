@@ -24,4 +24,5 @@ export class AppComponent {
       group: 'CGI'
     }
   ]
+  test = new Array();
 }
