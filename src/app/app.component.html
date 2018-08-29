@@ -1,10 +1,1 @@
-<app-multiselect [items]="data" bindLabel="name" [(ngModel)]="test"></app-multiselect>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
-<ul>
-    <li *ngFor="let item of data">{{item.name}}</li>
-</ul>
-
-<ul>
-    <li *ngFor="let item of test">{{item.name}}</li>
-</ul>
+<app-multiselect [items]="data" bindLabel="name" groupLabel="group" [(ngModel)]="test"></app-multiselect>

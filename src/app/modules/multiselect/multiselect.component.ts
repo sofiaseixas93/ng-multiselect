@@ -15,10 +15,13 @@ export class MultiselectComponent implements OnInit, ControlValueAccessor {
 
   @Input() items: Array<any>;
   @Input() bindLabel: string;
+  @Input() groupLabel: string;
   @Input() disabled = false;
 
   selectable: Array<any> = new Array();
   selected: Array<any> = new Array();
+
+  groups: Array<string> = new Array();
 
   constructor() { }
 
@@ -26,6 +29,14 @@ export class MultiselectComponent implements OnInit, ControlValueAccessor {
     //copy items array and sort it
     this.selectable = this.items.map(item => Object.assign({}, item));
     this.selectable = this.sortItems(this.selectable);
+
+    this.items.forEach((item) => {
+      if (!this.groups.includes(item[this.groupLabel])) {
+        this.groups.push(item[this.groupLabel]);
+      }
+    });
+
+    this.groups = this.sortGroups(this.groups);
   }
 
   writeValue(obj: any): void {
@@ -41,9 +52,9 @@ export class MultiselectComponent implements OnInit, ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  onChange = () => {};
+  onChange = () => { };
 
-  onTouched = () => {};
+  onTouched = () => { };
 
   select(index: number) {
     if (!this.disabled) {
@@ -61,6 +72,18 @@ export class MultiselectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  private sortGroups(groups: Array<string>) {
+    return groups.sort((group1, group2) => {
+      if (group1 > group2) {
+        return 1;
+      } else if (group1 < group2) {
+        return -1;
+      } else {
+        return 0;
+      }
+    })
+  }
+
   private sortItems(items: Array<any>) {
     return items.sort((item1, item2) => {
       if (item1[this.bindLabel] > item2[this.bindLabel]) {
@@ -71,6 +94,20 @@ export class MultiselectComponent implements OnInit, ControlValueAccessor {
         return 0;
       }
     });
+  }
+
+  hasAnySelected(group: string) {
+    if (this.selected == null) {
+      return false;
+    }
+    return this.selected.find((element) => { return element[this.groupLabel] == group; }) != undefined;
+  }
+
+  hasAnySelectable(group: string) {
+    if (this.selectable == null) {
+      return false;
+    }
+    return this.selectable.find((element) => { return element[this.groupLabel] == group; }) != undefined;
   }
 
 }

@@ -1,16 +1,30 @@
 <div class="ms-container">
   <div class="ms-selectable">
     <ul class="ms-list">
-      <li *ngFor="let item of selectable; let i = index" class="ms-item" (click)="select(i)">
-        {{item[bindLabel]}}
-      </li>
+      <div *ngFor="let group of groups">
+        <div *ngIf="hasAnySelectable(group)">
+          <li class="ms-group">{{group}}</li>
+          <div *ngFor="let item of selectable; let i = index">
+            <li *ngIf="item[groupLabel] == group" class="ms-item" (click)="select(i)">
+              {{item[bindLabel]}}
+            </li>
+          </div>
+        </div>
+      </div>
     </ul>
   </div>
   <div class="ms-selected">
     <ul class="ms-list">
-      <li *ngFor="let item of selected; let i = index" class="ms-item" (click)="unselect(i)">
-        {{item[bindLabel]}}
-      </li>
+      <div *ngFor="let group of groups">
+        <div *ngIf="hasAnySelected(group)">
+          <li class="ms-group">{{group}}</li>
+          <div *ngFor="let item of selected; let i = index">
+            <li *ngIf="item[groupLabel] == group" class="ms-item" (click)="unselect(i)">
+              {{item[bindLabel]}}
+            </li>
+          </div>
+        </div>
+      </div>
     </ul>
   </div>
 </div>
