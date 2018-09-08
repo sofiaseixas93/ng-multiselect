@@ -72,6 +72,36 @@ export class MultiselectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  selectGroup(group: string) {
+    if (!this.disabled) {
+      let newSelectable = new Array<any>();
+      this.selectable.forEach((value, index, array) => {
+        if (value[this.groupLabel] == group) {
+          this.selected.push(value);
+        } else {
+          newSelectable.push(value);
+        }
+      });
+      this.selected = this.sortItems(this.selected);
+      this.selectable = newSelectable;
+    }
+  }
+
+  unselectGroup(group: string) {
+    if (!this.disabled) {
+      let newSelected = new Array<any>();
+      this.selected.forEach((value, index, array) => {
+        if (value[this.groupLabel] == group) {
+          this.selectable.push(value);
+        } else {
+          newSelected.push(value);
+        }
+      });
+      this.selectable = this.sortItems(this.selectable);
+      this.selected = newSelected;
+    }
+  }
+
   private sortGroups(groups: Array<string>) {
     return groups.sort((group1, group2) => {
       if (group1 > group2) {

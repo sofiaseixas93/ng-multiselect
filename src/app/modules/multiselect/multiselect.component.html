@@ -3,7 +3,9 @@
     <ul class="ms-list">
       <div *ngFor="let group of groups">
         <div *ngIf="hasAnySelectable(group)">
-          <li class="ms-group">{{group}}</li>
+          <li class="ms-group" (click)="selectGroup(group)">
+            {{group}}
+          </li>
           <div *ngFor="let item of selectable; let i = index">
             <li *ngIf="item[groupLabel] == group" class="ms-item" (click)="select(i)">
               {{item[bindLabel]}}
@@ -17,7 +19,9 @@
     <ul class="ms-list">
       <div *ngFor="let group of groups">
         <div *ngIf="hasAnySelected(group)">
-          <li class="ms-group">{{group}}</li>
+          <li class="ms-group" (click)="unselectGroup(group)">
+            {{group}}
+          </li>
           <div *ngFor="let item of selected; let i = index">
             <li *ngIf="item[groupLabel] == group" class="ms-item" (click)="unselect(i)">
               {{item[bindLabel]}}
