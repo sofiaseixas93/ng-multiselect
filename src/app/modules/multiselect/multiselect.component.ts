@@ -13,13 +13,20 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class MultiselectComponent implements OnInit, ControlValueAccessor {
 
-  @Input() items: Array<any>;
-  @Input() bindLabel: string;
-  @Input() groupLabel: string;
+  @Input() items = new Array<any>();
+  @Input() bindLabel = "label";
+  @Input() groupLabel = "group";
   @Input() disabled = false;
+  @Input() enableSearch = true;
 
   selectable: Array<any> = new Array();
   selected: Array<any> = new Array();
+
+  selectableWithSearch: Array<any> = new Array();
+  selectedWithSearch: Array<any> = new Array();
+
+  selectableSearch: string;
+  selectedSearch: string;
 
   groups: Array<string> = new Array();
 
@@ -30,13 +37,15 @@ export class MultiselectComponent implements OnInit, ControlValueAccessor {
     this.selectable = this.items.map(item => Object.assign({}, item));
     this.selectable = this.sortItems(this.selectable);
 
+    //populate group array and sort it
     this.items.forEach((item) => {
       if (!this.groups.includes(item[this.groupLabel])) {
         this.groups.push(item[this.groupLabel]);
       }
     });
-
     this.groups = this.sortGroups(this.groups);
+    this.onSelectableSearch();
+    this.onSelectedSearch();
   }
 
   writeValue(obj: any): void {
@@ -61,6 +70,8 @@ export class MultiselectComponent implements OnInit, ControlValueAccessor {
       const item = this.selectable.splice(index, 1)[0];
       this.selected.push(item);
       this.selected = this.sortItems(this.selected);
+      this.onSelectableSearch();
+      this.onSelectedSearch();
     }
   }
 
@@ -69,13 +80,15 @@ export class MultiselectComponent implements OnInit, ControlValueAccessor {
       const item = this.selected.splice(index, 1)[0];
       this.selectable.push(item);
       this.selectable = this.sortItems(this.selectable);
+      this.onSelectableSearch();
+      this.onSelectedSearch();
     }
   }
 
   selectGroup(group: string) {
     if (!this.disabled) {
       let newSelectable = new Array<any>();
-      this.selectable.forEach((value, index, array) => {
+      this.selectable.forEach((value) => {
         if (value[this.groupLabel] == group) {
           this.selected.push(value);
         } else {
@@ -84,13 +97,15 @@ export class MultiselectComponent implements OnInit, ControlValueAccessor {
       });
       this.selected = this.sortItems(this.selected);
       this.selectable = newSelectable;
+      this.onSelectableSearch();
+      this.onSelectedSearch();
     }
   }
 
   unselectGroup(group: string) {
     if (!this.disabled) {
       let newSelected = new Array<any>();
-      this.selected.forEach((value, index, array) => {
+      this.selected.forEach((value) => {
         if (value[this.groupLabel] == group) {
           this.selectable.push(value);
         } else {
@@ -99,6 +114,44 @@ export class MultiselectComponent implements OnInit, ControlValueAccessor {
       });
       this.selectable = this.sortItems(this.selectable);
       this.selected = newSelected;
+      this.onSelectableSearch();
+      this.onSelectedSearch();
+    }
+  }
+
+  hasAnySelected(group: string) {
+    if (this.selectedWithSearch == null) {
+      return false;
+    }
+    return this.selectedWithSearch.find((element) => { return element[this.groupLabel] == group; }) != undefined;
+  }
+
+  hasAnySelectable(group: string) {
+    if (this.selectableWithSearch == null) {
+      return false;
+    }
+    return this.selectableWithSearch.find((element) => { return element[this.groupLabel] == group; }) != undefined;
+  }
+
+  onSelectableSearch() {
+    if (this.selectableSearch == null || this.selectableSearch == "") {
+      this.selectableWithSearch = this.selectable;
+    } else {
+      this.selectableWithSearch = this.selectable.filter((value) => {
+        return value[this.bindLabel].toUpperCase().includes(this.selectableSearch.toUpperCase()) 
+        || value[this.groupLabel].toUpperCase().includes(this.selectableSearch.toUpperCase());
+      });
+    }
+  }
+
+  onSelectedSearch() {
+    if (this.selectedSearch == null || this.selectedSearch == "") {
+      this.selectedWithSearch = this.selected;
+    } else {
+      this.selectedWithSearch = this.selected.filter((value) => {
+        return value[this.bindLabel].toUpperCase().includes(this.selectedSearch.toUpperCase()) 
+        || value[this.groupLabel].toUpperCase().includes(this.selectedSearch.toUpperCase());
+      });
     }
   }
 
@@ -124,20 +177,6 @@ export class MultiselectComponent implements OnInit, ControlValueAccessor {
         return 0;
       }
     });
-  }
-
-  hasAnySelected(group: string) {
-    if (this.selected == null) {
-      return false;
-    }
-    return this.selected.find((element) => { return element[this.groupLabel] == group; }) != undefined;
-  }
-
-  hasAnySelectable(group: string) {
-    if (this.selectable == null) {
-      return false;
-    }
-    return this.selectable.find((element) => { return element[this.groupLabel] == group; }) != undefined;
   }
 
 }

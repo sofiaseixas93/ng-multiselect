@@ -17,6 +17,15 @@
     width: 45%;
 }
 
+.ms-searchbox {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    position: relative;
+    padding: 0;
+    height: 25px;
+    width: 100%;
+}
+
 .ms-list {
     border: 1px solid #ccc;
     border-radius: 3px;

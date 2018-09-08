@@ -1,12 +1,13 @@
 <div class="ms-container">
   <div class="ms-selectable">
+    <input type="text" *ngIf="enableSearch" class="ms-searchbox" [(ngModel)]="selectableSearch" (ngModelChange)="onSelectableSearch()">
     <ul class="ms-list">
       <div *ngFor="let group of groups">
         <div *ngIf="hasAnySelectable(group)">
           <li class="ms-group" (click)="selectGroup(group)">
             {{group}}
           </li>
-          <div *ngFor="let item of selectable; let i = index">
+          <div *ngFor="let item of selectableWithSearch; let i = index">
             <li *ngIf="item[groupLabel] == group" class="ms-item" (click)="select(i)">
               {{item[bindLabel]}}
             </li>
@@ -16,13 +17,14 @@
     </ul>
   </div>
   <div class="ms-selected">
+    <input type="text" *ngIf="enableSearch" class="ms-searchbox" [(ngModel)]="selectedSearch" (ngModelChange)="onSelectedSearch()">
     <ul class="ms-list">
       <div *ngFor="let group of groups">
         <div *ngIf="hasAnySelected(group)">
           <li class="ms-group" (click)="unselectGroup(group)">
             {{group}}
           </li>
-          <div *ngFor="let item of selected; let i = index">
+          <div *ngFor="let item of selectedWithSearch; let i = index">
             <li *ngIf="item[groupLabel] == group" class="ms-item" (click)="unselect(i)">
               {{item[bindLabel]}}
             </li>
