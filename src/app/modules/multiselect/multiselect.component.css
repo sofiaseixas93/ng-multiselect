@@ -22,8 +22,10 @@
     border-radius: 3px;
     position: relative;
     padding: 0;
+    padding-left: 1%;
+    padding-right: 1%;
     height: 25px;
-    width: 100%;
+    width: 98%;
 }
 
 .ms-list {
